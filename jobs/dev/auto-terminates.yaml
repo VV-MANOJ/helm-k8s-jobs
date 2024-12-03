@@ -1,8 +1,9 @@
 jobs:
-  - name: job1
-    image: "nginx:latest"
+  - name: "job1"
+    image: "python:3.9-slim"
     command: ["echo", "Hello from job1"]
-    backoffLimit: 3
+    backoffLimit: 2
+    command: ["python", "-c", "print('Hello, Kubernetes!')"]
     completions: 1
     parallelism: 1
     activeDeadlineSeconds: 60   # Completes immediately

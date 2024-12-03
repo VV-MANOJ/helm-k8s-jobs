@@ -1,11 +1,11 @@
 jobs:
-  - name: job2
-    image: "alpine:latest"
-    command: ["sh", "-c", "sleep 60; echo 'Job 2 completed'; sleep 120"]
-    backoffLimit: 3
+  - name: "job2"
+    image: "busybox:latest"
+    command: ["sh", "-c", "echo 'Job running'; sleep 60; echo 'Job completed'"]
+    backoffLimit: 2
     completions: 1
     parallelism: 1
-    activeDeadlineSeconds: 180  # Allows 3 minutes
+    activeDeadlineSeconds: 30   # Completes immediately
     restartPolicy: Never
     # No nodeSelector to avoid scheduling issues
     nodeSelector: {}
@@ -17,4 +17,3 @@ jobs:
       limits:
         memory: "128Mi"
         cpu: "500m"
-
