@@ -1,0 +1,20 @@
+jobs:
+  - name: job2
+    image: "alpine:latest"
+    command: ["sh", "-c", "sleep 60; echo 'Job 2 completed'; sleep 120"]
+    backoffLimit: 3
+    completions: 1
+    parallelism: 1
+    activeDeadlineSeconds: 180  # Allows 3 minutes
+    restartPolicy: Never
+    # No nodeSelector to avoid scheduling issues
+    nodeSelector: {}
+    affinity: null
+    resources:
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+

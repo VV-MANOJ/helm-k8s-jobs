@@ -1,0 +1,84 @@
+{{- range .Values.jobs }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ .name }}
+  labels:
+    app: {{ $.Chart.Name }}
+spec:
+  # Set backoffLimit if defined, otherwise default to 6
+  backoffLimit: {{ .backoffLimit | default 6 }}
+  
+  # Set completions if defined, otherwise default to 1
+  completions: {{ .completions | default 1 }}
+  
+  # Set parallelism if defined, otherwise default to 1
+  parallelism: {{ .parallelism | default 1 }}
+  
+  # Set activeDeadlineSeconds if defined, otherwise do not include it
+  {{- if .activeDeadlineSeconds }}
+  activeDeadlineSeconds: {{ .activeDeadlineSeconds }}
+  {{- end }}
+  
+  template:
+    metadata:
+      labels:
+        job: {{ .name }}
+    spec:
+      # Specify restart policy (Never is typical for Jobs)
+      restartPolicy: Never
+
+      # Containers list
+      containers:
+        - name: {{ .name }}
+          image: {{ .image }}
+          command: {{ .command | toJson }}
+          
+          # If environment variables are provided, include them
+          env:
+          {{- if .env }}
+          {{- range .env }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+          {{- end }}
+          {{- end }}
+          
+          # Resources configuration (limits and requests)
+          resources:
+          {{- if .resources }}
+            {{- if .resources.limits }}
+            limits:
+              {{- toYaml .resources.limits | nindent 12 }}
+            {{- end }}
+            {{- if .resources.requests }}
+            requests:
+              {{- toYaml .resources.requests | nindent 12 }}
+            {{- end }}
+          {{- end }}
+
+      # Optional nodeSelector
+      {{- if .nodeSelector }}
+      nodeSelector:
+        {{- toYaml .nodeSelector | nindent 8 }}
+      {{- end }}
+
+      # Optional tolerations
+      {{- if .tolerations }}
+      tolerations:
+        {{- toYaml .tolerations | nindent 8 }}
+      {{- end }}
+
+      # Optional affinity
+      {{- if .affinity }}
+      affinity:
+        {{- toYaml .affinity | nindent 8 }}
+      {{- end }}
+
+      # Optional securityContext
+      {{- if .securityContext }}
+      securityContext:
+        {{- toYaml .securityContext | nindent 8 }}
+      {{- end }}
+
+{{- end }}
+

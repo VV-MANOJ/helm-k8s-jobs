@@ -1,0 +1,20 @@
+# Job 1: Completes immediately and auto-terminates
+jobs:
+  - name: job1
+    image: "nginx:latest"
+    command: ["echo", "Hello from job1"]
+    backoffLimit: 3
+    completions: 1
+    parallelism: 1
+    activeDeadlineSeconds: 60   # Completes immediately
+    restartPolicy: Always
+    nodeSelector:
+      kubernetes.io/hostname: "node1"
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 3000
+    schedule: "0 10 * * *"  # Schedule job1 to run at 10 AM every day
+
+# Disable other jobs (commented out or empty configuration)
+# jobs: []
+

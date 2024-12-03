@@ -1,0 +1,52 @@
+# Default values for kubernetes-job-chart.
+# This will be used to configure Kubernetes Jobs in the templates.
+
+jobs:
+  - name: job1
+    image: "nginx:latest"
+    command: ["echo", "Hello from job1"]
+    env:
+      - name: ENV_VAR_1
+        value: "value1"
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+      requests:
+        memory: "64Mi"
+        cpu: "250m"
+    backoffLimit: 3
+    completions: 1
+    parallelism: 1
+    activeDeadlineSeconds: 600
+    nodeSelector:
+      kubernetes.io/hostname: "node1"
+    tolerations:
+      - key: "key1"
+        operator: "Equal"
+        value: "value1"
+        effect: "NoSchedule"
+    affinity:
+      nodeAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+            - matchExpressions:
+                - key: "disktype"
+                  operator: "In"
+                  values:
+                    - "ssd"
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 3000
+
+  - name: job2
+    image: "alpine:latest"
+    command: ["echo", "Hello from job2"]
+    env:
+      - name: ENV_VAR_2
+        value: "value2"
+    resources: {}
+    backoffLimit: 5
+    completions: 2
+    parallelism: 2
+

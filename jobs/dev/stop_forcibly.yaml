@@ -1,0 +1,20 @@
+jobs:
+  - name: job3
+    image: "ubuntu:latest"
+    command: ["sh", "-c", "sleep 300; echo 'Job 3 forcibly terminated'"]
+    backoffLimit: 3
+    completions: 1
+    parallelism: 1
+    activeDeadlineSeconds: 120  # Forces termination after 2 minutes
+    restartPolicy: Never
+    # No nodeSelector to avoid scheduling issues
+    nodeSelector: {}
+    affinity: null
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "500m"
+      limits:
+        memory: "256Mi"
+        cpu: "1000m"
+

@@ -1,0 +1,19 @@
+jobs:
+  - name: job4
+    image: "nginx:latest"
+    command: ["sh", "-c", "echo 'Job 4 failure simulation'; exit 1"]
+    backoffLimit: 3
+    completions: 1
+    parallelism: 1
+    activeDeadlineSeconds: 180
+    restartPolicy: Always
+    nodeSelector: {}
+    affinity: null
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "500m"
+      limits:
+        memory: "256Mi"
+        cpu: "1000m"
+

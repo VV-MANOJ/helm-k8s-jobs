@@ -1,0 +1,20 @@
+# Job 2: Completes in 1 minute, waits for 2 minutes, then terminates
+jobs:
+  - name: job2
+    image: "alpine:latest"
+    command: ["sh", "-c", "sleep 60; echo 'Job 2 completed'; sleep 120; echo 'Job 2 terminated'"]
+    backoffLimit: 3
+    completions: 1
+    parallelism: 1
+    activeDeadlineSeconds: 180  # Allows a maximum of 3 minutes
+    restartPolicy: Always
+    nodeSelector:
+      kubernetes.io/hostname: "node2"
+    securityContext:
+      runAsUser: 1000
+      runAsGroup: 3000
+    schedule: "0 10 * * *"  # Schedule job2 to run at 10 AM every day
+
+# Disable other jobs
+# jobs: []
+
